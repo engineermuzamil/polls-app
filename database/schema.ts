@@ -7,8 +7,59 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+export class PollOptionSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'label', 'pollId'] as const
+  $columns = PollOptionSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare label: string
+  @column()
+  declare pollId: number
+}
+
+export class PollVoteSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'pollId', 'pollOptionId', 'userId'] as const
+  $columns = PollVoteSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare pollId: number
+  @column()
+  declare pollOptionId: number
+  @column()
+  declare userId: number
+}
+
+export class PollSchema extends BaseModel {
+  static $columns = ['closesAt', 'createdAt', 'deletedAt', 'id', 'pollColor', 'slug', 'title', 'updatedAt', 'userId'] as const
+  $columns = PollSchema.$columns
+  @column.dateTime()
+  declare closesAt: DateTime
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column.dateTime()
+  declare deletedAt: DateTime | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare pollColor: string
+  @column()
+  declare slug: string
+  @column()
+  declare title: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+  @column()
+  declare userId: number | null
+}
+
 export class UserSchema extends BaseModel {
-  static $columns = ['createdAt', 'email', 'fullName', 'id', 'password', 'updatedAt'] as const
+  static $columns = ['createdAt', 'email', 'fullName', 'id', 'password', 'role', 'updatedAt'] as const
   $columns = UserSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -20,6 +71,8 @@ export class UserSchema extends BaseModel {
   declare id: number
   @column({ serializeAs: null })
   declare password: string
+  @column()
+  declare role: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 }
