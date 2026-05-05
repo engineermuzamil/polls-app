@@ -18,7 +18,7 @@ export default class extends BaseSeeder {
       }
     )
 
-    const [alice, bob, sara] = await Promise.all([
+    const [alice, bob, _sara] = await Promise.all([
       User.updateOrCreate(
         { email: 'alice@polls.dev' },
         {

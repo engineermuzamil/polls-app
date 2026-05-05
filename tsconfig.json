@@ -3,7 +3,18 @@
   "compilerOptions": {
     "rootDir": "./",
     "jsx": "react",
-    "outDir": "./build"
+    "outDir": "./build",
+    "paths": {
+      "#utils/*": ["./app/utils/*"],
+      "#models/*": ["./app/models/*"],
+      "#controllers/*": ["./app/controllers/*"],
+      "#validators/*": ["./app/validators/*"],
+      "#middleware/*": ["./app/middleware/*"],
+      "#exceptions/*": ["./app/exceptions/*"],
+      "#transformers/*": ["./app/transformers/*"],
+      "#start/*": ["./start/*"],
+      "#providers/*": ["./providers/*"]
+    }
   },
   "references": [{ "path": "./tsconfig.inertia.json" }]
 }

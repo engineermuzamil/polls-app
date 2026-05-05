@@ -19,9 +19,45 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'session.show_login': {
+    methods: ["GET","HEAD"]
+    pattern: '/login'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/session_controller').default['showLogin']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/session_controller').default['showLogin']>>>
+    }
+  }
+  'session.login': {
+    methods: ["POST"]
+    pattern: '/login'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/auth').loginValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/auth').loginValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/session_controller').default['login']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/session_controller').default['login']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'session.logout': {
+    methods: ["POST"]
+    pattern: '/logout'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/session_controller').default['logout']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/session_controller').default['logout']>>>
+    }
+  }
   'new_account.create': {
     methods: ["GET","HEAD"]
-    pattern: '/signup'
+    pattern: '/register'
     types: {
       body: {}
       paramsTuple: []
@@ -33,7 +69,7 @@ export interface Registry {
   }
   'new_account.store': {
     methods: ["POST"]
-    pattern: '/signup'
+    pattern: '/register'
     types: {
       body: ExtractBody<InferInput<(typeof import('#validators/user').signupValidator)>>
       paramsTuple: []
@@ -43,40 +79,124 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/new_account_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
-  'session.create': {
+  'polls.index': {
     methods: ["GET","HEAD"]
-    pattern: '/login'
+    pattern: '/polls'
     types: {
       body: {}
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/session_controller').default['create']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/session_controller').default['create']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/polls_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/polls_controller').default['index']>>>
     }
   }
-  'session.store': {
-    methods: ["POST"]
-    pattern: '/login'
+  'polls.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/polls/:slug'
     types: {
       body: {}
-      paramsTuple: []
-      params: {}
+      paramsTuple: [ParamValue]
+      params: { slug: ParamValue }
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/session_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/session_controller').default['store']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/polls_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/polls_controller').default['show']>>>
     }
   }
-  'session.destroy': {
+  'polls.vote': {
     methods: ["POST"]
-    pattern: '/logout'
+    pattern: '/polls/:slug/vote'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/poll').voteValidator)>>
+      paramsTuple: [ParamValue]
+      params: { slug: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/poll').voteValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/polls_controller').default['vote']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/polls_controller').default['vote']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'polls.results': {
+    methods: ["GET","HEAD"]
+    pattern: '/polls/:slug/results'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { slug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/polls_controller').default['results']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/polls_controller').default['results']>>>
+    }
+  }
+  'admin.dashboard': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin'
     types: {
       body: {}
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/session_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/session_controller').default['destroy']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['dashboard']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['dashboard']>>>
+    }
+  }
+  'admin_polls.store': {
+    methods: ["POST"]
+    pattern: '/admin/polls'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/poll').createPollValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/poll').createPollValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin_polls.trash': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/polls/trash'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['trash']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['trash']>>>
+    }
+  }
+  'admin_polls.soft_delete': {
+    methods: ["DELETE"]
+    pattern: '/admin/polls/:slug'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { slug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['softDelete']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['softDelete']>>>
+    }
+  }
+  'admin_polls.restore': {
+    methods: ["PATCH"]
+    pattern: '/admin/polls/:slug/restore'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { slug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['restore']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['restore']>>>
+    }
+  }
+  'admin_polls.force_delete': {
+    methods: ["DELETE"]
+    pattern: '/admin/polls/:slug/force'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { slug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['forceDelete']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['forceDelete']>>>
     }
   }
 }
