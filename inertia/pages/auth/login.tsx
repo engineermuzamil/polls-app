@@ -1,48 +1,55 @@
 import { Form } from '@adonisjs/inertia/react'
+import { Link } from '@inertiajs/react'
 
 export default function Login() {
   return (
-    <div className="form-container">
-      <div>
-        <h1> Login </h1>
-        <p>Enter your details below to login to your account</p>
-      </div>
+    <div className="auth-root auth-root-login">
+      <div className="auth-card">
+        <Link href="/" className="auth-logo">
+          Polls
+        </Link>
 
-      <div>
-        <Form route="session.store">
+        <h1 className="auth-heading">Welcome back</h1>
+        <p className="auth-sub">Sign in to your account to continue</p>
+
+        <Form action="/login" method="post">
           {({ errors }) => (
             <>
-              <div>
+              <div className="field">
                 <label htmlFor="email">Email</label>
                 <input
                   type="email"
                   name="email"
                   id="email"
                   autoComplete="username"
+                  placeholder="you@example.com"
                   data-invalid={errors.email ? 'true' : undefined}
                 />
-                {errors.email && <div>{errors.email}</div>}
+                {errors.email && <div className="field-error">{errors.email}</div>}
               </div>
 
-              <div>
+              <div className="field">
                 <label htmlFor="password">Password</label>
                 <input
                   type="password"
                   name="password"
                   id="password"
                   autoComplete="current-password"
+                  placeholder="••••••••"
                 />
-                {errors.password ? <span>{errors.password}</span> : ''}
+                {errors.password && <div className="field-error">{errors.password}</div>}
               </div>
 
-              <div>
-                <button type="submit" className="button">
-                  Login
-                </button>
-              </div>
+              <button type="submit" className="submit-btn">
+                Sign in →
+              </button>
             </>
           )}
         </Form>
+
+        <div className="auth-footer">
+          Don't have an account? <Link href="/register">Sign up</Link>
+        </div>
       </div>
     </div>
   )
