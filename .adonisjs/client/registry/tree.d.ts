@@ -3,14 +3,14 @@ import type { routes } from './index.ts'
 
 export interface ApiDefinition {
   home: typeof routes['home']
-  session: {
-    showLogin: typeof routes['session.show_login']
-    login: typeof routes['session.login']
-    logout: typeof routes['session.logout']
-  }
-  newAccount: {
-    create: typeof routes['new_account.create']
-    store: typeof routes['new_account.store']
+  auth: {
+    login: typeof routes['auth.login'] & {
+      store: typeof routes['auth.login.store']
+    }
+    logout: typeof routes['auth.logout']
+    register: typeof routes['auth.register'] & {
+      store: typeof routes['auth.register.store']
+    }
   }
   polls: {
     index: typeof routes['polls.index']
@@ -20,12 +20,12 @@ export interface ApiDefinition {
   }
   admin: {
     dashboard: typeof routes['admin.dashboard']
-  }
-  adminPolls: {
-    store: typeof routes['admin_polls.store']
-    trash: typeof routes['admin_polls.trash']
-    softDelete: typeof routes['admin_polls.soft_delete']
-    restore: typeof routes['admin_polls.restore']
-    forceDelete: typeof routes['admin_polls.force_delete']
+    polls: {
+      store: typeof routes['admin.polls.store']
+      trash: typeof routes['admin.polls.trash']
+      delete: typeof routes['admin.polls.delete']
+      restore: typeof routes['admin.polls.restore']
+      forceDelete: typeof routes['admin.polls.force-delete']
+    }
   }
 }

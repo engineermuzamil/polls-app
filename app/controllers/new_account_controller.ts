@@ -12,8 +12,11 @@ export default class NewAccountController {
 
   /**
    * POST /register
+   * Creates the account, logs in immediately, then redirects by role:
+   *  - admin  → /admin
+   *  - voter  → /polls
    */
-  async store({ request, auth, response }: HttpContext) {
+  async store({ request, auth, response, session }: HttpContext) {
     const payload = await request.validateUsing(signupValidator)
 
     const user = await User.create({
@@ -25,14 +28,8 @@ export default class NewAccountController {
 
     await auth.use('web').login(user)
 
-    return response.created({
-      message: 'Account created successfully',
-      user: {
-        id: user.id,
-        fullName: user.fullName,
-        email: user.email,
-        role: user.role,
-      },
-    })
+    session.flash('success', `Account created! Welcome, ${user.fullName ?? user.email}.`)
+
+    return response.redirect().toRoute(user.isAdmin ? 'admin.dashboard' : 'polls.index')
   }
 }

@@ -9,7 +9,7 @@ export default class PollsController {
   /**
    * GET /polls
    */
-  async index({ response }: HttpContext) {
+  async index({ inertia }: HttpContext) {
     const polls = await Poll.query()
       .whereNull('deleted_at')
       .preload('author')
@@ -22,7 +22,7 @@ export default class PollsController {
 
     const closedPolls = polls.filter((p) => p.closesAt <= now).map((p) => formatPoll(p))
 
-    return response.json({ activePolls, closedPolls })
+    return inertia.render('polls/index', { activePolls, closedPolls })
   }
 
   /**

@@ -12,31 +12,31 @@ export default class SessionController {
 
   /**
    * POST /login
+   * Validates credentials, creates a session, then redirects by role:
+   *  - admin  → /admin
+   *  - voter  → /polls
    */
-  async login({ request, auth, response }: HttpContext) {
+  async login({ request, auth, response, session }: HttpContext) {
     const { email, password } = await request.validateUsing(loginValidator)
 
     const user = await User.verifyCredentials(email, password)
 
     await auth.use('web').login(user)
 
-    return response.json({
-      message: 'Logged in successfully',
-      user: {
-        id: user.id,
-        fullName: user.fullName,
-        email: user.email,
-        role: user.role,
-      },
-    })
+    session.flash('success', `Welcome back, ${user.fullName ?? user.email}!`)
+
+    return response.redirect().toRoute(user.isAdmin ? 'admin.dashboard' : 'polls.index')
   }
 
   /**
    * POST /logout
+   * Destroys the session and sends the user back to /login.
    */
-  async logout({ auth, response }: HttpContext) {
+  async logout({ auth, response, session }: HttpContext) {
     await auth.use('web').logout()
 
-    return response.json({ message: 'Logged out successfully' })
+    session.flash('success', 'You have been signed out.')
+
+    return response.redirect().toRoute('auth.login')
   }
 }

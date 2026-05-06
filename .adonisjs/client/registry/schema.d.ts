@@ -19,7 +19,7 @@ export interface Registry {
       errorResponse: unknown
     }
   }
-  'session.show_login': {
+  'auth.login': {
     methods: ["GET","HEAD"]
     pattern: '/login'
     types: {
@@ -31,7 +31,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/session_controller').default['showLogin']>>>
     }
   }
-  'session.login': {
+  'auth.login.store': {
     methods: ["POST"]
     pattern: '/login'
     types: {
@@ -43,7 +43,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/session_controller').default['login']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
-  'session.logout': {
+  'auth.logout': {
     methods: ["POST"]
     pattern: '/logout'
     types: {
@@ -55,7 +55,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/session_controller').default['logout']>>>
     }
   }
-  'new_account.create': {
+  'auth.register': {
     methods: ["GET","HEAD"]
     pattern: '/register'
     types: {
@@ -67,7 +67,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/new_account_controller').default['create']>>>
     }
   }
-  'new_account.store': {
+  'auth.register.store': {
     methods: ["POST"]
     pattern: '/register'
     types: {
@@ -139,7 +139,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['dashboard']>>>
     }
   }
-  'admin_polls.store': {
+  'admin.polls.store': {
     methods: ["POST"]
     pattern: '/admin/polls'
     types: {
@@ -151,7 +151,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
-  'admin_polls.trash': {
+  'admin.polls.trash': {
     methods: ["GET","HEAD"]
     pattern: '/admin/polls/trash'
     types: {
@@ -163,7 +163,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['trash']>>>
     }
   }
-  'admin_polls.soft_delete': {
+  'admin.polls.delete': {
     methods: ["DELETE"]
     pattern: '/admin/polls/:slug'
     types: {
@@ -175,7 +175,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['softDelete']>>>
     }
   }
-  'admin_polls.restore': {
+  'admin.polls.restore': {
     methods: ["PATCH"]
     pattern: '/admin/polls/:slug/restore'
     types: {
@@ -187,7 +187,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['restore']>>>
     }
   }
-  'admin_polls.force_delete': {
+  'admin.polls.force-delete': {
     methods: ["DELETE"]
     pattern: '/admin/polls/:slug/force'
     types: {

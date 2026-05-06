@@ -11,7 +11,7 @@ export default class AdminPollsController {
    * GET /admin
    * Returns all polls split into active, expired, and a trashed count.
    */
-  async dashboard({ response }: HttpContext) {
+  async dashboard({ inertia }: HttpContext) {
     // Fetch everything — active and soft-deleted — in one query
     const allPolls = await Poll.query()
       .preload('author')
@@ -30,7 +30,7 @@ export default class AdminPollsController {
 
     const trashedCount = allPolls.filter((p) => p.deletedAt !== null).length
 
-    return response.json({ activePolls, expiredPolls, trashedCount })
+    return inertia.render('admin/dashboard', { activePolls, expiredPolls, trashedCount })
   }
 
   /**
