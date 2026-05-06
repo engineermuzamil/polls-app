@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react'
+import { Button } from '@/components/ui/button'
 
 export default function Home() {
   return (
@@ -6,12 +7,38 @@ export default function Home() {
       <nav className="home-nav">
         <span className="home-logo">Polls</span>
         <div className="home-nav-links">
-          <Link href="/login" className="btn-ghost">
-            Login
-          </Link>
-          <Link href="/register" className="btn-primary-nav">
-            Get started
-          </Link>
+          <Button
+            variant="ghost"
+            asChild
+            style={{
+              color: 'rgba(255,255,255,0.6)',
+              fontSize: '14px',
+              fontWeight: 400,
+              padding: '8px 18px',
+              borderRadius: '8px',
+              background: 'transparent',
+              height: 'auto',
+            }}
+            className="hover:text-white hover:bg-white/6"
+          >
+            <Link href="/login">Login</Link>
+          </Button>
+          <Button
+            asChild
+            style={{
+              background: '#6366f1',
+              color: '#fff',
+              fontSize: '14px',
+              fontWeight: 500,
+              padding: '8px 20px',
+              borderRadius: '8px',
+              height: 'auto',
+              border: 'none',
+            }}
+            className="hover:bg-[#5254cc] hover:-translate-y-px transition-all"
+          >
+            <Link href="/register">Get started</Link>
+          </Button>
         </div>
       </nav>
 
@@ -65,7 +92,9 @@ export default function Home() {
         </div>
       </div>
 
-      <footer className="home-footer">© {new Date().getFullYear()} Polls. Built with Polls App.</footer>
+      <footer className="home-footer">
+        © {new Date().getFullYear()} Polls. Built with Polls App.
+      </footer>
     </div>
   )
 }
