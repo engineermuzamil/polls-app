@@ -1,21 +1,42 @@
-import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
+import User from '#models/user'
+import { loginValidator } from '#validators/auth'
 
 export default class SessionController {
-  async create({ inertia }: HttpContext) {
+  /**
+   * GET /login
+   */
+  async showLogin({ inertia }: HttpContext) {
     return inertia.render('auth/login', {})
   }
 
-  async store({ request, auth, response }: HttpContext) {
-    const { email, password } = request.all()
+  /**
+   * POST /login
+   * Validates credentials, creates a session, then redirects by role:
+   *  - admin  → /admin
+   *  - voter  → /polls
+   */
+  async login({ request, auth, response, session }: HttpContext) {
+    const { email, password } = await request.validateUsing(loginValidator)
+
     const user = await User.verifyCredentials(email, password)
 
     await auth.use('web').login(user)
-    response.redirect().toRoute('home')
+
+    session.flash('success', `Welcome back, ${user.fullName ?? user.email}!`)
+
+    return response.redirect().toRoute(user.isAdmin ? 'admin.dashboard' : 'polls.index')
   }
 
-  async destroy({ auth, response }: HttpContext) {
+  /**
+   * POST /logout
+   * Destroys the session and sends the user back to /login.
+   */
+  async logout({ auth, response, session }: HttpContext) {
     await auth.use('web').logout()
-    response.redirect().toRoute('session.create')
+
+    session.flash('success', 'You have been signed out.')
+
+    return response.redirect().toRoute('auth.login')
   }
 }

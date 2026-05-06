@@ -4,6 +4,8 @@
  */
 
 export const controllers = {
+  AdminPolls: () => import('#controllers/admin_polls_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
+  Polls: () => import('#controllers/polls_controller'),
   Session: () => import('#controllers/session_controller'),
 }

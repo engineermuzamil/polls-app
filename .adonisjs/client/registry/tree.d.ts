@@ -3,13 +3,29 @@ import type { routes } from './index.ts'
 
 export interface ApiDefinition {
   home: typeof routes['home']
-  newAccount: {
-    create: typeof routes['new_account.create']
-    store: typeof routes['new_account.store']
+  auth: {
+    login: typeof routes['auth.login'] & {
+      store: typeof routes['auth.login.store']
+    }
+    logout: typeof routes['auth.logout']
+    register: typeof routes['auth.register'] & {
+      store: typeof routes['auth.register.store']
+    }
   }
-  session: {
-    create: typeof routes['session.create']
-    store: typeof routes['session.store']
-    destroy: typeof routes['session.destroy']
+  polls: {
+    index: typeof routes['polls.index']
+    show: typeof routes['polls.show']
+    vote: typeof routes['polls.vote']
+    results: typeof routes['polls.results']
+  }
+  admin: {
+    dashboard: typeof routes['admin.dashboard']
+    polls: {
+      store: typeof routes['admin.polls.store']
+      trash: typeof routes['admin.polls.trash']
+      delete: typeof routes['admin.polls.delete']
+      restore: typeof routes['admin.polls.restore']
+      forceDelete: typeof routes['admin.polls.force-delete']
+    }
   }
 }
