@@ -1,6 +1,8 @@
 import { Data } from '@generated/data'
 import { Link } from '@inertiajs/react'
 import { usePage } from '@inertiajs/react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 
 export default function AdminDashboard() {
   const { user, flash } = usePage<Data.SharedProps>().props
@@ -25,6 +27,7 @@ export default function AdminDashboard() {
         </div>
       )}
 
+      {/* Header */}
       <div
         style={{
           display: 'flex',
@@ -36,30 +39,34 @@ export default function AdminDashboard() {
         }}
       >
         <span style={{ fontFamily: 'Instrument Serif, serif', fontSize: 22 }}>Polls</span>
-
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>
             {user?.fullName ?? user?.email}
           </span>
-          <Link
-            href="/logout"
-            method="post"
-            as="button"
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
             style={{
               background: 'rgba(255,255,255,0.06)',
               border: '1px solid rgba(255,255,255,0.1)',
               color: 'rgba(255,255,255,0.6)',
               borderRadius: 8,
-              padding: '8px 16px',
               fontSize: 13,
               cursor: 'pointer',
+              height: 'auto',
+              padding: '8px 16px',
             }}
+            className="hover:text-white hover:bg-white/10"
           >
-            Sign out
-          </Link>
+            <Link href="/logout" method="post" as="button">
+              Sign out
+            </Link>
+          </Button>
         </div>
       </div>
 
+      {/* Title */}
       <h1
         style={{
           fontFamily: 'Instrument Serif, serif',
@@ -74,6 +81,7 @@ export default function AdminDashboard() {
         Manage polls, review results, and control the trash.
       </p>
 
+      {/* Stats */}
       <div
         style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16, maxWidth: 640 }}
       >
@@ -82,20 +90,21 @@ export default function AdminDashboard() {
           { label: 'Expired polls', value: '—', color: '#f59e0b' },
           { label: 'Trashed', value: '—', color: '#6b7280' },
         ].map((stat) => (
-          <div
+          <Card
             key={stat.label}
             style={{
               background: '#141414',
               border: '1px solid rgba(255,255,255,0.08)',
               borderRadius: 12,
-              padding: '20px 24px',
             }}
           >
-            <div style={{ fontSize: 28, fontWeight: 600, color: stat.color, marginBottom: 4 }}>
-              {stat.value}
-            </div>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{stat.label}</div>
-          </div>
+            <CardContent style={{ padding: '20px 24px' }}>
+              <div style={{ fontSize: 28, fontWeight: 600, color: stat.color, marginBottom: 4 }}>
+                {stat.value}
+              </div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{stat.label}</div>
+            </CardContent>
+          </Card>
         ))}
       </div>
 
