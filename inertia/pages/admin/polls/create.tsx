@@ -3,7 +3,6 @@ import { Link } from '@inertiajs/react'
 import type { InertiaProps } from '~/types'
 import { POLL_COLORS } from '~/types/poll'
 import PageHeader from '~/components/page_header'
-import FlashMessage from '~/components/flash_message'
 import PollColorSwatch from '~/components/polls/poll_color_swatch'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -33,7 +32,7 @@ const inputStyle: React.CSSProperties = {
 }
 
 export default function CreatePoll() {
-  const { user, flash } = usePage<Props>().props
+  const { user } = usePage<Props>().props
 
   const { data, setData, post, processing, errors } = useForm({
     title: '',
@@ -72,8 +71,6 @@ export default function CreatePoll() {
         userName={user?.fullName ?? user?.email}
         links={[{ label: 'Trash', href: '/admin/polls/trash' }]}
       />
-
-      <FlashMessage flash={flash} />
 
       <div style={{ maxWidth: 560 }}>
         <h1

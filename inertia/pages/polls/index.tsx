@@ -2,7 +2,6 @@ import { usePage } from '@inertiajs/react'
 import type { InertiaProps } from '~/types'
 import type { PollData } from '~/types/poll'
 import PageHeader from '~/components/page_header'
-import FlashMessage from '~/components/flash_message'
 import PollCard from '~/components/polls/poll_card'
 
 type Props = InertiaProps<{
@@ -11,7 +10,7 @@ type Props = InertiaProps<{
 }>
 
 export default function PollsIndex() {
-  const { activePolls, closedPolls, user, flash } = usePage<Props>().props
+  const { activePolls, closedPolls, user } = usePage<Props>().props
 
   const sectionLabel: React.CSSProperties = {
     fontSize: 11,
@@ -28,8 +27,6 @@ export default function PollsIndex() {
         userName={user?.fullName ?? user?.email}
         links={[{ label: 'Polls', href: '/polls', active: true }]}
       />
-
-      <FlashMessage flash={flash} />
 
       <div style={{ marginBottom: 36 }}>
         <h1

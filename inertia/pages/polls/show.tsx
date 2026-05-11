@@ -3,7 +3,6 @@ import { useState } from 'react'
 import type { InertiaProps } from '~/types'
 import type { PollData, OptionData } from '~/types/poll'
 import PageHeader from '~/components/page_header'
-import FlashMessage from '~/components/flash_message'
 import PollBadge from '~/components/polls/poll_badge'
 import PollOptionVote from '~/components/polls/poll_option_vote'
 import PollResultBar from '~/components/polls/poll_result_bar'
@@ -18,7 +17,7 @@ type Props = InertiaProps<{
 }>
 
 export default function PollShow() {
-  const { poll, options, hasVoted, userVoteOptionId, totalVotes, isAdmin, user, flash } =
+  const { poll, options, hasVoted, userVoteOptionId, totalVotes, isAdmin, user } =
     usePage<Props>().props
 
   const [selectedId, setSelectedId] = useState<number | null>(null)
@@ -61,14 +60,13 @@ export default function PollShow() {
         links={
           isAdmin
             ? [
+                { label: 'Dashboard', href: '/admin' },
                 { label: 'Trash', href: '/admin/polls/trash' },
                 { label: '+ Create Poll', href: '/admin/polls/create', variant: 'primary' },
               ]
             : [{ label: 'Polls', href: '/polls' }]
         }
       />
-
-      <FlashMessage flash={flash} />
 
       <div style={{ maxWidth: 600 }}>
         {/* Poll header card */}

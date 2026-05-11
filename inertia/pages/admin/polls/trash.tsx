@@ -2,14 +2,13 @@ import { useForm, usePage } from '@inertiajs/react'
 import type { InertiaProps } from '~/types'
 import type { PollData } from '~/types/poll'
 import PageHeader from '~/components/page_header'
-import FlashMessage from '~/components/flash_message'
 
 type Props = InertiaProps<{
   trashedPolls: PollData[]
 }>
 
 export default function PollsTrash() {
-  const { trashedPolls, user, flash } = usePage<Props>().props
+  const { trashedPolls, user } = usePage<Props>().props
 
   const restoreForm = useForm({})
   const deleteForm = useForm({})
@@ -29,8 +28,6 @@ export default function PollsTrash() {
         userName={user?.fullName ?? user?.email}
         links={[{ label: '+ Create Poll', href: '/admin/polls/create', variant: 'primary' }]}
       />
-
-      <FlashMessage flash={flash} />
 
       <div style={{ marginBottom: 32 }}>
         <h1

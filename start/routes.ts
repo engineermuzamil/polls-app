@@ -3,7 +3,8 @@ import { middleware } from '#start/kernel'
 import { controllers } from '#generated/controllers'
 
 // ─── Home ────────────────────────────────────────────────────────────────────
-router.on('/').renderInertia('home', {}).as('home')
+// Uses HomeController so logged-in users are redirected to their dashboard
+router.get('/', [controllers.Home, 'index']).as('home')
 
 // ─── Auth ────────────────────────────────────────────────────────────────────
 router.get('/login', [controllers.Session, 'showLogin']).use(middleware.guest()).as('auth.login')
@@ -39,7 +40,6 @@ router
     router.get('/', [controllers.AdminPolls, 'dashboard']).as('admin.dashboard')
 
     // IMPORTANT: /polls/create and /polls/trash must be registered BEFORE /polls/:slug
-
     router.get('/polls/create', [controllers.AdminPolls, 'create']).as('admin.polls.create')
     router.get('/polls/trash', [controllers.AdminPolls, 'trash']).as('admin.polls.trash')
 

@@ -7,6 +7,7 @@ export default class HomeController {
    * Only unauthenticated visitors see the public landing page.
    */
   async index({ inertia, auth, response }: HttpContext) {
+    throw new Error('test')
     const isLoggedIn = await auth.check()
 
     if (isLoggedIn) {

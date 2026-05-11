@@ -2,7 +2,6 @@ import { Link, useForm, usePage } from '@inertiajs/react'
 import type { InertiaProps } from '~/types'
 import type { PollData } from '~/types/poll'
 import PageHeader from '~/components/page_header'
-import FlashMessage from '~/components/flash_message'
 import PollCard from '~/components/polls/poll_card'
 
 type Props = InertiaProps<{
@@ -12,7 +11,7 @@ type Props = InertiaProps<{
 }>
 
 export default function AdminDashboard() {
-  const { activePolls, expiredPolls, trashedCount, user, flash } = usePage<Props>().props
+  const { activePolls, expiredPolls, trashedCount, user } = usePage<Props>().props
 
   const deleteForm = useForm({})
 
@@ -39,8 +38,6 @@ export default function AdminDashboard() {
           { label: '+ Create Poll', href: '/admin/polls/create', variant: 'primary' },
         ]}
       />
-
-      <FlashMessage flash={flash} />
 
       {/* Stats row */}
       <div
