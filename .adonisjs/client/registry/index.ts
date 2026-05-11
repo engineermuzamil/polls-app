@@ -72,17 +72,23 @@ const routes = {
     tokens: [{"old":"/admin","type":0,"val":"admin","end":""}],
     types: placeholder as Registry['admin.dashboard']['types'],
   },
-  'admin.polls.store': {
-    methods: ["POST"],
-    pattern: '/admin/polls',
-    tokens: [{"old":"/admin/polls","type":0,"val":"admin","end":""},{"old":"/admin/polls","type":0,"val":"polls","end":""}],
-    types: placeholder as Registry['admin.polls.store']['types'],
+  'admin.polls.create': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/polls/create',
+    tokens: [{"old":"/admin/polls/create","type":0,"val":"admin","end":""},{"old":"/admin/polls/create","type":0,"val":"polls","end":""},{"old":"/admin/polls/create","type":0,"val":"create","end":""}],
+    types: placeholder as Registry['admin.polls.create']['types'],
   },
   'admin.polls.trash': {
     methods: ["GET","HEAD"],
     pattern: '/admin/polls/trash',
     tokens: [{"old":"/admin/polls/trash","type":0,"val":"admin","end":""},{"old":"/admin/polls/trash","type":0,"val":"polls","end":""},{"old":"/admin/polls/trash","type":0,"val":"trash","end":""}],
     types: placeholder as Registry['admin.polls.trash']['types'],
+  },
+  'admin.polls.store': {
+    methods: ["POST"],
+    pattern: '/admin/polls',
+    tokens: [{"old":"/admin/polls","type":0,"val":"admin","end":""},{"old":"/admin/polls","type":0,"val":"polls","end":""}],
+    types: placeholder as Registry['admin.polls.store']['types'],
   },
   'admin.polls.delete': {
     methods: ["DELETE"],

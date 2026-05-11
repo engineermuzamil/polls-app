@@ -9,44 +9,49 @@ import db from '@adonisjs/lucid/services/db'
 export default class AdminPollsController {
   /**
    * GET /admin
-   * Returns all polls split into active, expired, and a trashed count.
+   * Renders the admin dashboard with active, expired, and trashed poll counts.
    */
   async dashboard({ inertia }: HttpContext) {
-    // Fetch everything — active and soft-deleted — in one query
-    const allPolls = await Poll.query()
+    const allPollsRaw = await Poll.query()
       .preload('author')
       .withCount('votes')
       .orderBy('created_at', 'desc')
 
     const now = DateTime.local()
 
-    const activePolls = allPolls
+    const activePolls = allPollsRaw
       .filter((p) => p.deletedAt === null && p.closesAt > now)
       .map((p) => formatPoll(p))
 
-    const expiredPolls = allPolls
+    const expiredPolls = allPollsRaw
       .filter((p) => p.deletedAt === null && p.closesAt <= now)
       .map((p) => formatPoll(p))
 
-    const trashedCount = allPolls.filter((p) => p.deletedAt !== null).length
+    const trashedCount = allPollsRaw.filter((p) => p.deletedAt !== null).length
 
     return inertia.render('admin/dashboard', { activePolls, expiredPolls, trashedCount })
   }
 
   /**
-   * POST /admin/polls
-   * Creates a poll with options inside a transaction.
+   * GET /admin/polls/create
+   * Renders the create poll form.
    */
-  async store({ request, auth, response }: HttpContext) {
+  async create({ inertia }: HttpContext) {
+    return inertia.render('admin/polls/create', {})
+  }
+
+  /**
+   * POST /admin/polls
+   * Creates a poll with options inside a transaction, then redirects with flash.
+   */
+  async store({ request, auth, response, session }: HttpContext) {
     const user = auth.getUserOrFail()
     const { title, pollColor, closesAt, options } = await request.validateUsing(createPollValidator)
 
     const slug = await generateSlug(title)
-
-    // vine.date() returns a JS Date — convert to Luxon DateTime for Lucid
     const closesAtDateTime = DateTime.fromISO(closesAt)
 
-    const poll = await db.transaction(async (trx) => {
+    await db.transaction(async (trx) => {
       const newPoll = await Poll.create(
         {
           userId: user.id,
@@ -66,46 +71,45 @@ export default class AdminPollsController {
       return newPoll
     })
 
-    return response.created({
-      message: 'Poll created successfully',
-      slug: poll.slug,
-    })
+    session.flash('success', 'Poll created successfully')
+    return response.redirect().toRoute('admin.dashboard')
   }
 
   /**
    * GET /admin/polls/trash
-   * Returns only soft-deleted polls.
+   * Renders the trash page with soft-deleted polls.
    */
-  async trash({ response }: HttpContext) {
+  async trash({ inertia }: HttpContext) {
     const trashedPolls = await Poll.query()
       .whereNotNull('deleted_at')
       .preload('author')
       .withCount('votes')
       .orderBy('deleted_at', 'desc')
 
-    return response.json({
+    return inertia.render('admin/polls/trash', {
       trashedPolls: trashedPolls.map((p) => formatPoll(p)),
     })
   }
 
   /**
    * DELETE /admin/polls/:slug
-   * Soft delete — sets deleted_at. Poll stays in DB and is recoverable.
+   * Soft delete — sets deleted_at. Redirects back with flash.
    */
-  async softDelete({ params, response }: HttpContext) {
+  async softDelete({ params, response, session }: HttpContext) {
     const poll = await Poll.query().where('slug', params.slug).whereNull('deleted_at').firstOrFail()
 
     poll.deletedAt = DateTime.local()
     await poll.save()
 
-    return response.json({ message: 'Poll moved to trash' })
+    session.flash('success', 'Poll moved to trash')
+    return response.redirect().toRoute('admin.dashboard')
   }
 
   /**
    * PATCH /admin/polls/:slug/restore
-   * Restores a soft-deleted poll by clearing deleted_at.
+   * Restores a soft-deleted poll. Redirects to trash with flash.
    */
-  async restore({ params, response }: HttpContext) {
+  async restore({ params, response, session }: HttpContext) {
     const poll = await Poll.query()
       .where('slug', params.slug)
       .whereNotNull('deleted_at')
@@ -114,19 +118,24 @@ export default class AdminPollsController {
     poll.deletedAt = null
     await poll.save()
 
-    return response.json({ message: 'Poll restored successfully' })
+    session.flash('success', 'Poll restored successfully')
+    return response.redirect().toRoute('admin.polls.trash')
   }
 
   /**
    * DELETE /admin/polls/:slug/force
-   * Permanently deletes — works on both trashed and active polls.
+   * Permanently deletes a poll (must be in trash first).
    * Cascades to poll_options and poll_votes via DB constraints.
    */
-  async forceDelete({ params, response }: HttpContext) {
-    const poll = await Poll.query().where('slug', params.slug).firstOrFail()
+  async forceDelete({ params, response, session }: HttpContext) {
+    const poll = await Poll.query()
+      .where('slug', params.slug)
+      .whereNotNull('deleted_at')
+      .firstOrFail()
 
     await poll.delete()
 
-    return response.json({ message: 'Poll permanently deleted' })
+    session.flash('success', 'Poll permanently deleted')
+    return response.redirect().toRoute('admin.polls.trash')
   }
 }

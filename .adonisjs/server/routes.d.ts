@@ -15,8 +15,9 @@ export type ScannedRoutes = {
     'polls.vote': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
     'polls.results': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
     'admin.dashboard': { paramsTuple?: []; params?: {} }
-    'admin.polls.store': { paramsTuple?: []; params?: {} }
+    'admin.polls.create': { paramsTuple?: []; params?: {} }
     'admin.polls.trash': { paramsTuple?: []; params?: {} }
+    'admin.polls.store': { paramsTuple?: []; params?: {} }
     'admin.polls.delete': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
     'admin.polls.restore': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
     'admin.polls.force-delete': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
@@ -29,6 +30,7 @@ export type ScannedRoutes = {
     'polls.show': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
     'polls.results': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
     'admin.dashboard': { paramsTuple?: []; params?: {} }
+    'admin.polls.create': { paramsTuple?: []; params?: {} }
     'admin.polls.trash': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
@@ -39,6 +41,7 @@ export type ScannedRoutes = {
     'polls.show': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
     'polls.results': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
     'admin.dashboard': { paramsTuple?: []; params?: {} }
+    'admin.polls.create': { paramsTuple?: []; params?: {} }
     'admin.polls.trash': { paramsTuple?: []; params?: {} }
   }
   POST: {

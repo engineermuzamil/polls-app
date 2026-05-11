@@ -6,14 +6,8 @@ import { controllers } from '#generated/controllers'
 router.on('/').renderInertia('home', {}).as('home')
 
 // ─── Auth ────────────────────────────────────────────────────────────────────
-// Guest middleware redirects already-logged-in users away from auth pages.
-// GuestMiddleware.redirectTo defaults to '/' — logged-in users hitting /login
-// or /register will bounce to home (app.tsx layout handles role-aware nav from there).
-
 router.get('/login', [controllers.Session, 'showLogin']).use(middleware.guest()).as('auth.login')
-
 router.post('/login', [controllers.Session, 'login']).use(middleware.guest()).as('auth.login.store')
-
 router.post('/logout', [controllers.Session, 'logout']).use(middleware.auth()).as('auth.logout')
 
 router
@@ -23,7 +17,7 @@ router
 
 router
   .post('/register', [controllers.NewAccount, 'store'])
-  .use(middleware.guest()) // prevent logged-in users re-submitting signup
+  .use(middleware.guest())
   .as('auth.register.store')
 
 // ─── Voter routes (auth required) ────────────────────────────────────────────
@@ -43,8 +37,13 @@ router.get('/polls/:slug/results', [controllers.Polls, 'results']).as('polls.res
 router
   .group(() => {
     router.get('/', [controllers.AdminPolls, 'dashboard']).as('admin.dashboard')
-    router.post('/polls', [controllers.AdminPolls, 'store']).as('admin.polls.store')
+
+    // IMPORTANT: /polls/create and /polls/trash must be registered BEFORE /polls/:slug
+
+    router.get('/polls/create', [controllers.AdminPolls, 'create']).as('admin.polls.create')
     router.get('/polls/trash', [controllers.AdminPolls, 'trash']).as('admin.polls.trash')
+
+    router.post('/polls', [controllers.AdminPolls, 'store']).as('admin.polls.store')
     router.delete('/polls/:slug', [controllers.AdminPolls, 'softDelete']).as('admin.polls.delete')
     router
       .patch('/polls/:slug/restore', [controllers.AdminPolls, 'restore'])
