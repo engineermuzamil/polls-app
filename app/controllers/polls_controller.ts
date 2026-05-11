@@ -19,7 +19,6 @@ export default class PollsController {
     const now = DateTime.local()
 
     const activePolls = polls.filter((p) => p.closesAt > now).map((p) => formatPoll(p))
-
     const closedPolls = polls.filter((p) => p.closesAt <= now).map((p) => formatPoll(p))
 
     return inertia.render('polls/index', { activePolls, closedPolls })
@@ -27,9 +26,9 @@ export default class PollsController {
 
   /**
    * GET /polls/:slug
-  
+   * Renders the poll detail page via Inertia.
    */
-  async show({ params, auth, response }: HttpContext) {
+  async show({ params, auth, inertia }: HttpContext) {
     const user = auth.getUserOrFail()
 
     const poll = await Poll.query()
@@ -39,7 +38,6 @@ export default class PollsController {
       .withCount('votes')
       .firstOrFail()
 
-    // Check if this user already voted on this poll
     const existingVote = await PollVote.query()
       .where('poll_id', poll.id)
       .where('user_id', user.id)
@@ -47,15 +45,17 @@ export default class PollsController {
 
     const totalVotes = Number(poll.$extras.votes_count)
 
-    return response.json({
+    const options = poll.options.map((opt) => ({
+      id: opt.id,
+      label: opt.label,
+      votesCount: Number(opt.$extras.votes_count),
+      percentage:
+        totalVotes > 0 ? Math.round((Number(opt.$extras.votes_count) / totalVotes) * 1000) / 10 : 0,
+    }))
+
+    return inertia.render('polls/show', {
       poll: formatPoll(poll),
-      options: poll.options.map((opt) => ({
-        id: opt.id,
-        label: opt.label,
-        votesCount: Number(opt.$extras.votes_count),
-        percentage:
-          totalVotes > 0 ? Math.round((Number(opt.$extras.votes_count) / totalVotes) * 100) : 0,
-      })),
+      options,
       hasVoted: !!existingVote,
       userVoteOptionId: existingVote?.pollOptionId ?? null,
       totalVotes,
@@ -65,47 +65,40 @@ export default class PollsController {
 
   /**
    * POST /polls/:slug/vote
-   *
-   * Records a vote for the authenticated user.
-   * Guards:
-   *  - Admins cannot vote
-   *  - Cannot vote on expired polls
-   *  - Cannot vote twice (DB unique constraint is the final guard)
+   * Records a vote then redirects back to the poll page with flash.
    */
-  async vote({ params, request, auth, response }: HttpContext) {
+  async vote({ params, request, auth, response, session }: HttpContext) {
     const user = auth.getUserOrFail()
 
     const poll = await Poll.query().where('slug', params.slug).whereNull('deleted_at').firstOrFail()
 
-    // Admins do not vote
     if (user.isAdmin) {
-      return response.badRequest({ message: 'Admins do not vote on polls' })
+      session.flash('error', 'Admins do not vote on polls')
+      return response.redirect().toRoute('polls.show', { slug: params.slug })
     }
 
-    // Cannot vote on a closed poll
     if (poll.expired) {
-      return response.badRequest({
-        message: 'This poll has closed and is no longer accepting votes',
-      })
+      session.flash('error', 'This poll has closed and is no longer accepting votes')
+      return response.redirect().toRoute('polls.show', { slug: params.slug })
     }
 
-    // Check for duplicate vote before hitting the DB unique constraint
     const existingVote = await PollVote.query()
       .where('poll_id', poll.id)
       .where('user_id', user.id)
       .first()
 
     if (existingVote) {
-      return response.unprocessableEntity({ message: 'You have already voted on this poll' })
+      session.flash('error', 'You have already voted on this poll')
+      return response.redirect().toRoute('polls.show', { slug: params.slug })
     }
 
     const { poll_option_id } = await request.validateUsing(voteValidator)
 
-    // Make sure the option actually belongs to this poll
     const option = await poll.related('options').query().where('id', poll_option_id).first()
 
     if (!option) {
-      return response.badRequest({ message: 'Invalid option for this poll' })
+      session.flash('error', 'Invalid option for this poll')
+      return response.redirect().toRoute('polls.show', { slug: params.slug })
     }
 
     await PollVote.create({
@@ -114,15 +107,15 @@ export default class PollsController {
       userId: user.id,
     })
 
-    return response.json({ message: 'Your vote has been recorded' })
+    session.flash('success', 'Your vote has been recorded')
+    return response.redirect().toRoute('polls.show', { slug: params.slug })
   }
 
   /**
    * GET /polls/:slug/results
-   *
-   * Returns vote counts and percentages for each option.
+   * Public read-only results page.
    */
-  async results({ params, response }: HttpContext) {
+  async results({ params, inertia }: HttpContext) {
     const poll = await Poll.query()
       .where('slug', params.slug)
       .whereNull('deleted_at')
@@ -132,15 +125,17 @@ export default class PollsController {
 
     const totalVotes = Number(poll.$extras.votes_count)
 
-    return response.json({
+    const options = poll.options.map((opt) => ({
+      id: opt.id,
+      label: opt.label,
+      votesCount: Number(opt.$extras.votes_count),
+      percentage:
+        totalVotes > 0 ? Math.round((Number(opt.$extras.votes_count) / totalVotes) * 1000) / 10 : 0,
+    }))
+
+    return inertia.render('polls/results', {
       poll: formatPoll(poll),
-      options: poll.options.map((opt) => ({
-        id: opt.id,
-        label: opt.label,
-        votesCount: Number(opt.$extras.votes_count),
-        percentage:
-          totalVotes > 0 ? Math.round((Number(opt.$extras.votes_count) / totalVotes) * 100) : 0,
-      })),
+      options,
       totalVotes,
     })
   }
