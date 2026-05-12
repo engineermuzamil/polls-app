@@ -3,8 +3,7 @@ import { middleware } from '#start/kernel'
 import { controllers } from '#generated/controllers'
 
 // ─── Home ────────────────────────────────────────────────────────────────────
-// Uses HomeController so logged-in users are redirected to their dashboard
-router.get('/', [controllers.Home, 'index']).as('home')
+router.on('/').renderInertia('home', {}).as('home')
 
 // ─── Auth ────────────────────────────────────────────────────────────────────
 router.get('/login', [controllers.Session, 'showLogin']).use(middleware.guest()).as('auth.login')
