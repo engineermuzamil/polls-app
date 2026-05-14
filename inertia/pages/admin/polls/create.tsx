@@ -34,7 +34,12 @@ const inputStyle: React.CSSProperties = {
 export default function CreatePoll() {
   const { user } = usePage<Props>().props
 
-  const { data, setData, post, processing, errors } = useForm({
+  const { data, setData, post, processing, errors } = useForm<{
+    title: string
+    pollColor: string
+    closesAt: string
+    options: string[]
+  }>({
     title: '',
     pollColor: POLL_COLORS[0].value,
     closesAt: '',
