@@ -4,76 +4,41 @@ import type { PollData } from '~/types/poll'
 
 interface PollCardProps {
   poll: PollData
-  /** If provided, renders a soft-delete button on the right */
   onDelete?: (slug: string) => void
-  /** Link to navigate to when card is clicked */
   href?: string
-  /** Show vote count */
   showVotes?: boolean
 }
 
 export default function PollCard({ poll, onDelete, href, showVotes = true }: PollCardProps) {
   const variant = poll.isTrashed ? 'trashed' : poll.expired ? 'expired' : 'active'
+  const dimmed = poll.expired || poll.isTrashed
 
   const inner = (
-    <div
-      style={{
-        background: '#141414',
-        border: '1px solid rgba(255,255,255,0.07)',
-        borderRadius: 12,
-        padding: '16px 20px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 16,
-        transition: 'border-color 0.15s, background 0.15s',
-        cursor: href ? 'pointer' : 'default',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-      className="hover:border-white/15 hover:bg-[#181818]"
-    >
-      {/* Color accent bar */}
+    <div className="bg-[#141414] border border-white/7 rounded-xl p-4 flex items-center gap-4 relative overflow-hidden transition-all hover:border-white/15 hover:bg-[#181818]">
+      {/* Dynamic color accent bar — inline style required */}
       <div
-        style={{
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          bottom: 0,
-          width: 3,
-          background: poll.pollColor,
-          borderRadius: '12px 0 0 12px',
-          opacity: poll.expired || poll.isTrashed ? 0.35 : 0.9,
-        }}
+        className="absolute left-0 top-0 bottom-0 w-[3px] rounded-l-xl"
+        style={{ background: poll.pollColor, opacity: dimmed ? 0.35 : 0.9 }}
       />
 
-      {/* Main content */}
-      <div style={{ flex: 1, minWidth: 0, paddingLeft: 8 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+      <div className="flex-1 min-w-0 pl-2">
+        <div className="flex items-center gap-2 mb-1">
           <PollBadge variant={variant} />
         </div>
         <p
-          style={{
-            fontSize: 15,
-            fontWeight: 500,
-            color: poll.expired || poll.isTrashed ? 'rgba(255,255,255,0.5)' : '#fff',
-            margin: 0,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
+          className={`text-[15px] font-medium truncate ${dimmed ? 'text-white/50' : 'text-white'}`}
         >
           {poll.title}
         </p>
-        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginTop: 3 }}>
+        <p className="text-xs text-white/30 mt-0.5">
           {poll.author?.fullName ?? 'Unknown'} ·{' '}
           {poll.expired ? `closed ${poll.closesAtRelative}` : `closes ${poll.closesAtRelative}`}
         </p>
       </div>
 
-      {/* Right side */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
+      <div className="flex items-center gap-3 shrink-0">
         {showVotes && (
-          <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)', whiteSpace: 'nowrap' }}>
+          <span className="text-[13px] text-white/30 whitespace-nowrap">
             {poll.votesCount} {poll.votesCount === 1 ? 'vote' : 'votes'}
           </span>
         )}
@@ -85,21 +50,7 @@ export default function PollCard({ poll, onDelete, href, showVotes = true }: Pol
               onDelete(poll.slug)
             }}
             title="Move to trash"
-            style={{
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              color: 'rgba(255,255,255,0.3)',
-              borderRadius: 6,
-              width: 28,
-              height: 28,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              fontSize: 14,
-              transition: 'all 0.15s',
-            }}
-            className="hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400"
+            className="w-7 h-7 flex items-center justify-center rounded-md bg-white/5 border border-white/8 text-white/30 text-sm transition-all hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 cursor-pointer"
           >
             ×
           </button>
@@ -110,7 +61,7 @@ export default function PollCard({ poll, onDelete, href, showVotes = true }: Pol
 
   if (href) {
     return (
-      <Link href={href} style={{ display: 'block', textDecoration: 'none' }}>
+      <Link href={href} className="block no-underline">
         {inner}
       </Link>
     )

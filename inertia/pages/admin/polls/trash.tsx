@@ -2,14 +2,12 @@ import { useForm, usePage } from '@inertiajs/react'
 import type { InertiaProps } from '~/types'
 import type { PollData } from '~/types/poll'
 import PageHeader from '~/components/page_header'
+import { Button } from '@/components/ui/button'
 
-type Props = InertiaProps<{
-  trashedPolls: PollData[]
-}>
+type Props = InertiaProps<{ trashedPolls: PollData[] }>
 
 export default function PollsTrash() {
   const { trashedPolls, user } = usePage<Props>().props
-
   const restoreForm = useForm({})
   const deleteForm = useForm({})
 
@@ -23,88 +21,41 @@ export default function PollsTrash() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0c0c0c', color: '#fff', padding: '48px' }}>
+    <div className="min-h-screen bg-[#0c0c0c] text-white p-12">
       <PageHeader
         userName={user?.fullName ?? user?.email}
         links={[{ label: '+ Create Poll', href: '/admin/polls/create', variant: 'primary' }]}
       />
 
-      <div style={{ marginBottom: 32 }}>
-        <h1
-          style={{
-            fontFamily: 'Instrument Serif, serif',
-            fontSize: 32,
-            letterSpacing: -0.8,
-            marginBottom: 6,
-          }}
-        >
-          Trash
-        </h1>
-        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)' }}>
+      <div className="mb-8">
+        <h1 className="font-['Instrument_Serif',serif] text-[32px] tracking-tight mb-1.5">Trash</h1>
+        <p className="text-sm text-white/35">
           Polls moved to trash. Restore to bring them back, or permanently delete them.
         </p>
       </div>
 
       {trashedPolls.length === 0 ? (
-        <div
-          style={{
-            background: '#141414',
-            border: '1px solid rgba(255,255,255,0.07)',
-            borderRadius: 12,
-            padding: '32px',
-            textAlign: 'center',
-            color: 'rgba(255,255,255,0.25)',
-            fontSize: 14,
-          }}
-        >
+        <div className="bg-[#141414] border border-white/7 rounded-xl p-8 text-center text-sm text-white/25">
           Trash is empty.
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div className="flex flex-col gap-2.5">
           {trashedPolls.map((poll) => (
             <div
               key={poll.slug}
-              style={{
-                background: '#141414',
-                border: '1px solid rgba(255,255,255,0.07)',
-                borderRadius: 12,
-                padding: '18px 20px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 16,
-                position: 'relative',
-                overflow: 'hidden',
-              }}
+              className="bg-[#141414] border border-white/7 rounded-xl p-5 flex items-center gap-4 relative overflow-hidden"
             >
+              {/* Color bar — dynamic hex, inline style required */}
               <div
-                style={{
-                  position: 'absolute',
-                  left: 0,
-                  top: 0,
-                  bottom: 0,
-                  width: 3,
-                  background: poll.pollColor,
-                  opacity: 0.3,
-                  borderRadius: '12px 0 0 12px',
-                }}
+                className="absolute left-0 top-0 bottom-0 w-[3px] rounded-l-xl opacity-30"
+                style={{ background: poll.pollColor }}
               />
 
-              <div style={{ flex: 1, minWidth: 0, paddingLeft: 8 }}>
-                <p
-                  style={{
-                    fontSize: 15,
-                    fontWeight: 500,
-                    color: 'rgba(255,255,255,0.45)',
-                    textDecoration: 'line-through',
-                    marginBottom: 4,
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
+              <div className="flex-1 min-w-0 pl-2">
+                <p className="text-[15px] font-medium text-white/45 line-through truncate mb-1">
                   {poll.title}
                 </p>
-                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>
+                <p className="text-xs text-white/20">
                   Deleted{' '}
                   {poll.deletedAt
                     ? new Date(poll.deletedAt).toLocaleDateString('en-US', {
@@ -117,43 +68,25 @@ export default function PollsTrash() {
                 </p>
               </div>
 
-              <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-                <button
+              <div className="flex gap-2 shrink-0">
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={() => handleRestore(poll.slug)}
                   disabled={restoreForm.processing}
-                  style={{
-                    padding: '7px 14px',
-                    background: 'rgba(99,102,241,0.1)',
-                    border: '1px solid rgba(99,102,241,0.25)',
-                    borderRadius: 7,
-                    color: '#a5b4fc',
-                    fontSize: 13,
-                    cursor: 'pointer',
-                    fontWeight: 500,
-                    transition: 'all 0.15s',
-                  }}
-                  className="hover:bg-indigo-500/20"
+                  className="bg-indigo-500/10 border-indigo-500/25 text-indigo-300 hover:bg-indigo-500/20 hover:border-indigo-500/40 transition-colors"
                 >
                   Restore
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={() => handleForceDelete(poll.slug)}
                   disabled={deleteForm.processing}
-                  style={{
-                    padding: '7px 14px',
-                    background: 'rgba(239,68,68,0.08)',
-                    border: '1px solid rgba(239,68,68,0.2)',
-                    borderRadius: 7,
-                    color: '#fca5a5',
-                    fontSize: 13,
-                    cursor: 'pointer',
-                    fontWeight: 500,
-                    transition: 'all 0.15s',
-                  }}
-                  className="hover:bg-red-500/15"
+                  className="bg-red-500/8 border-red-500/20 text-red-300 hover:bg-red-500/15 hover:border-red-500/35 transition-colors"
                 >
                   Delete permanently
-                </button>
+                </Button>
               </div>
             </div>
           ))}

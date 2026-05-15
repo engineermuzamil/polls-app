@@ -12,7 +12,6 @@ type Props = InertiaProps<{
 
 export default function AdminDashboard() {
   const { activePolls, expiredPolls, trashedCount, user } = usePage<Props>().props
-
   const deleteForm = useForm({})
 
   function handleDelete(slug: string) {
@@ -20,17 +19,8 @@ export default function AdminDashboard() {
     deleteForm.delete(`/admin/polls/${slug}`)
   }
 
-  const sectionLabel: React.CSSProperties = {
-    fontSize: 11,
-    fontWeight: 600,
-    letterSpacing: '0.08em',
-    textTransform: 'uppercase',
-    color: 'rgba(255,255,255,0.25)',
-    marginBottom: 12,
-  }
-
   return (
-    <div style={{ minHeight: '100vh', background: '#0c0c0c', color: '#fff', padding: '48px' }}>
+    <div className="min-h-screen bg-[#0c0c0c] text-white p-12">
       <PageHeader
         userName={user?.fullName ?? user?.email}
         links={[
@@ -39,50 +29,37 @@ export default function AdminDashboard() {
         ]}
       />
 
-      {/* Stats row */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3,1fr)',
-          gap: 12,
-          maxWidth: 520,
-          marginBottom: 48,
-        }}
-      >
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-3 max-w-[520px] mb-12">
         {[
-          { label: 'Active', value: activePolls.length, color: '#6366f1' },
-          { label: 'Expired', value: expiredPolls.length, color: '#f59e0b' },
-          { label: 'Trashed', value: trashedCount, color: '#6b7280' },
+          { label: 'Active', value: activePolls.length, color: 'text-indigo-400' },
+          { label: 'Expired', value: expiredPolls.length, color: 'text-amber-400' },
+          { label: 'Trashed', value: trashedCount, color: 'text-zinc-500' },
         ].map((stat) => (
-          <div
-            key={stat.label}
-            style={{
-              background: '#141414',
-              border: '1px solid rgba(255,255,255,0.07)',
-              borderRadius: 10,
-              padding: '16px 20px',
-            }}
-          >
-            <div style={{ fontSize: 26, fontWeight: 600, color: stat.color, marginBottom: 2 }}>
-              {stat.value}
-            </div>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>{stat.label}</div>
+          <div key={stat.label} className="bg-[#141414] border border-white/8 rounded-xl p-5">
+            <div className={`text-[26px] font-semibold mb-0.5 ${stat.color}`}>{stat.value}</div>
+            <div className="text-xs text-white/30">{stat.label}</div>
           </div>
         ))}
       </div>
 
-      {/* Active polls */}
-      <div style={{ marginBottom: 40 }}>
-        <p style={sectionLabel}>Active</p>
+      {/* Active */}
+      <div className="mb-10">
+        <p className="text-[11px] font-semibold uppercase tracking-widest text-white/25 mb-3">
+          Active
+        </p>
         {activePolls.length === 0 ? (
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.2)', padding: '12px 0' }}>
+          <p className="text-[13px] text-white/20 py-3">
             No active polls.{' '}
-            <Link href="/admin/polls/create" style={{ color: '#6366f1' }}>
+            <Link
+              href="/admin/polls/create"
+              className="text-indigo-400 hover:text-indigo-300 transition-colors"
+            >
               Create one →
             </Link>
           </p>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div className="flex flex-col gap-2">
             {activePolls.map((poll) => (
               <PollCard
                 key={poll.slug}
@@ -95,11 +72,13 @@ export default function AdminDashboard() {
         )}
       </div>
 
-      {/* Expired polls */}
+      {/* Expired */}
       {expiredPolls.length > 0 && (
         <div>
-          <p style={sectionLabel}>Expired</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-white/25 mb-3">
+            Expired
+          </p>
+          <div className="flex flex-col gap-2">
             {expiredPolls.map((poll) => (
               <PollCard
                 key={poll.slug}

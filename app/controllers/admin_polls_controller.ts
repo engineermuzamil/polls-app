@@ -5,6 +5,7 @@ import { generateSlug } from '#utils/slug'
 import { formatPoll } from '#utils/poll_formatter'
 import { DateTime } from 'luxon'
 import db from '@adonisjs/lucid/services/db'
+import test from 'node:test'
 
 export default class AdminPollsController {
   /**
@@ -12,6 +13,7 @@ export default class AdminPollsController {
    * Renders the admin dashboard with active, expired, and trashed poll counts.
    */
   async dashboard({ inertia }: HttpContext) {
+    // throw new Error('test')
     const allPollsRaw = await Poll.query()
       .preload('author')
       .withCount('votes')

@@ -20,52 +20,28 @@ export default function PollOptionVote({
       type="button"
       disabled={disabled}
       onClick={() => !disabled && onClick(id)}
-      style={{
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 14,
-        padding: '13px 16px',
-        background: selected ? `${pollColor}14` : 'rgba(255,255,255,0.03)',
-        border: `1px solid ${selected ? pollColor + '50' : 'rgba(255,255,255,0.08)'}`,
-        borderRadius: 10,
-        cursor: disabled ? 'not-allowed' : 'pointer',
-        transition: 'all 0.15s',
-        textAlign: 'left',
-        opacity: disabled && !selected ? 0.5 : 1,
-      }}
-      className={!disabled ? 'hover:border-white/20 hover:bg-white/5' : ''}
+      className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-xl border text-left transition-all ${
+        disabled && !selected ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+      } ${
+        selected
+          ? 'border-white/20'
+          : 'bg-white/3 border-white/8 hover:border-white/20 hover:bg-white/5'
+      }`}
+      style={selected ? { background: `${pollColor}14`, borderColor: `${pollColor}50` } : undefined}
     >
       {/* Radio circle */}
       <span
+        className="w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center shrink-0 transition-all"
         style={{
-          width: 18,
-          height: 18,
-          borderRadius: '50%',
-          border: `2px solid ${selected ? pollColor : 'rgba(255,255,255,0.2)'}`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexShrink: 0,
-          transition: 'all 0.15s',
+          borderColor: selected ? pollColor : 'rgba(255,255,255,0.2)',
         }}
       >
         {selected && (
-          <span
-            style={{
-              width: 8,
-              height: 8,
-              borderRadius: '50%',
-              background: pollColor,
-              display: 'block',
-            }}
-          />
+          <span className="w-2 h-2 rounded-full block" style={{ background: pollColor }} />
         )}
       </span>
 
-      <span style={{ fontSize: 14, color: selected ? '#fff' : 'rgba(255,255,255,0.7)' }}>
-        {label}
-      </span>
+      <span className={`text-sm ${selected ? 'text-white' : 'text-white/70'}`}>{label}</span>
     </button>
   )
 }

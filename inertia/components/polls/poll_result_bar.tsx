@@ -14,53 +14,33 @@ export default function PollResultBar({
   isUserVote,
 }: PollResultBarProps) {
   return (
-    <div style={{ marginBottom: 16 }}>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: 6,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          {isUserVote && <span style={{ color: pollColor, fontSize: 13, fontWeight: 600 }}>✓</span>}
-          <span
-            style={{
-              fontSize: 14,
-              color: isUserVote ? '#fff' : 'rgba(255,255,255,0.7)',
-              fontWeight: isUserVote ? 500 : 400,
-            }}
-          >
+    <div className="mb-4">
+      <div className="flex justify-between items-center mb-1.5">
+        <div className="flex items-center gap-1.5">
+          {isUserVote && (
+            <span className="text-[13px] font-semibold" style={{ color: pollColor }}>
+              ✓
+            </span>
+          )}
+          <span className={`text-sm ${isUserVote ? 'text-white font-medium' : 'text-white/70'}`}>
             {label}
           </span>
         </div>
-        <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>
-          {percentage.toFixed(1)}%
-        </span>
+        <span className="text-[13px] text-white/50 font-medium">{percentage.toFixed(1)}%</span>
       </div>
 
       {/* Bar track */}
-      <div
-        style={{
-          height: 6,
-          background: 'rgba(255,255,255,0.07)',
-          borderRadius: 999,
-          overflow: 'hidden',
-        }}
-      >
+      <div className="h-1.5 bg-white/7 rounded-full overflow-hidden">
         <div
+          className="h-full rounded-full transition-[width] duration-500 ease-out"
           style={{
-            height: '100%',
             width: `${percentage}%`,
             background: isUserVote ? pollColor : `${pollColor}55`,
-            borderRadius: 999,
-            transition: 'width 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         />
       </div>
 
-      <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', marginTop: 4 }}>
+      <p className="text-xs text-white/25 mt-1">
         {votesCount} {votesCount === 1 ? 'vote' : 'votes'}
       </p>
     </div>

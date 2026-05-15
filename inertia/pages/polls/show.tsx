@@ -6,6 +6,7 @@ import PageHeader from '~/components/page_header'
 import PollBadge from '~/components/polls/poll_badge'
 import PollOptionVote from '~/components/polls/poll_option_vote'
 import PollResultBar from '~/components/polls/poll_result_bar'
+import { Button } from '@/components/ui/button'
 
 type Props = InertiaProps<{
   poll: PollData
@@ -22,7 +23,6 @@ export default function PollShow() {
 
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [voting, setVoting] = useState(false)
-
   const deleteForm = useForm({})
 
   function handleVote(optionId: number) {
@@ -54,7 +54,7 @@ export default function PollShow() {
   const effectiveVoteId = userVoteOptionId ?? selectedId
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0c0c0c', color: '#fff', padding: '48px' }}>
+    <div className="min-h-screen bg-[#0c0c0c] text-white p-12">
       <PageHeader
         userName={user?.fullName ?? user?.email}
         links={
@@ -68,69 +68,33 @@ export default function PollShow() {
         }
       />
 
-      <div style={{ maxWidth: 600 }}>
+      <div className="max-w-[600px]">
         {/* Poll header card */}
-        <div
-          style={{
-            background: '#141414',
-            border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: 16,
-            padding: '24px 28px',
-            marginBottom: 16,
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-        >
+        <div className="bg-[#141414] border border-white/8 rounded-2xl p-7 mb-4 relative overflow-hidden">
+          {/* Dynamic color accent bar — inline style required for hex value */}
           <div
-            style={{
-              position: 'absolute',
-              left: 0,
-              top: 0,
-              bottom: 0,
-              width: 3,
-              background: poll.pollColor,
-              opacity: poll.expired ? 0.35 : 0.9,
-            }}
+            className="absolute left-0 top-0 bottom-0 w-[3px] rounded-l-2xl transition-opacity"
+            style={{ background: poll.pollColor, opacity: poll.expired ? 0.35 : 0.9 }}
           />
 
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-              marginBottom: 12,
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div className="flex justify-between items-start mb-3">
+            <div className="flex items-center gap-2">
+              {/* Dynamic color dot */}
               <span
-                style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: '50%',
-                  background: poll.pollColor,
-                  display: 'inline-block',
-                  opacity: poll.expired ? 0.4 : 1,
-                }}
+                className="w-2.5 h-2.5 rounded-full inline-block"
+                style={{ background: poll.pollColor, opacity: poll.expired ? 0.4 : 1 }}
               />
               <PollBadge variant={poll.expired ? 'expired' : 'active'} />
             </div>
-            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>
+            <span className="text-xs text-white/30">
               {poll.expired ? `closed ${poll.closesAtRelative}` : `closes ${poll.closesAtRelative}`}
             </span>
           </div>
 
-          <h1
-            style={{
-              fontFamily: 'Instrument Serif, serif',
-              fontSize: 26,
-              letterSpacing: -0.5,
-              marginBottom: 8,
-              lineHeight: 1.2,
-            }}
-          >
+          <h1 className="font-['Instrument_Serif',serif] text-[26px] tracking-tight leading-snug mb-2">
             {poll.title}
           </h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>
+          <p className="text-[13px] text-white/35">
             by {poll.author?.fullName ?? 'Unknown'} · {totalVotes}{' '}
             {totalVotes === 1 ? 'vote' : 'votes'} so far
           </p>
@@ -138,19 +102,9 @@ export default function PollShow() {
 
         {/* Voting */}
         {canVote && (
-          <div
-            style={{
-              background: '#141414',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 16,
-              padding: '24px 28px',
-              marginBottom: 16,
-            }}
-          >
-            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginBottom: 14 }}>
-              Select one option to cast your vote
-            </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div className="bg-[#141414] border border-white/8 rounded-2xl p-7 mb-4">
+            <p className="text-[13px] text-white/40 mb-3.5">Select one option to cast your vote</p>
+            <div className="flex flex-col gap-2">
               {options.map((opt) => (
                 <PollOptionVote
                   key={opt.id}
@@ -163,7 +117,7 @@ export default function PollShow() {
                 />
               ))}
             </div>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)', marginTop: 12 }}>
+            <p className="text-xs text-white/20 mt-3">
               Click an option to vote — no submit button needed
             </p>
           </div>
@@ -171,15 +125,7 @@ export default function PollShow() {
 
         {/* Results */}
         {showResults && (
-          <div
-            style={{
-              background: '#141414',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 16,
-              padding: '24px 28px',
-              marginBottom: 16,
-            }}
-          >
+          <div className="bg-[#141414] border border-white/8 rounded-2xl p-7 mb-4">
             {options.map((opt) => (
               <PollResultBar
                 key={opt.id}
@@ -191,51 +137,31 @@ export default function PollShow() {
               />
             ))}
 
-            <div
-              style={{
-                borderTop: '1px solid rgba(255,255,255,0.07)',
-                paddingTop: 14,
-                marginTop: 8,
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)' }}>
+            <div className="border-t border-white/7 pt-3.5 mt-2 flex justify-between items-center">
+              <p className="text-[13px] text-white/30">
                 {totalVotes} total {totalVotes === 1 ? 'vote' : 'votes'}
                 {effectiveVoteId && !isAdmin && (
                   <span>
                     {' '}
                     · you voted for{' '}
-                    <strong style={{ color: 'rgba(255,255,255,0.6)' }}>
+                    <strong className="text-white/60">
                       {options.find((o) => o.id === effectiveVoteId)?.label}
                     </strong>
                   </span>
                 )}
               </p>
               {isAdmin && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)' }}>
-                    You created this poll
-                  </span>
-                  <button
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-white/25">You created this poll</span>
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={handleDelete}
                     disabled={deleteForm.processing}
-                    style={{
-                      padding: '6px 14px',
-                      background: 'rgba(239,68,68,0.08)',
-                      border: '1px solid rgba(239,68,68,0.2)',
-                      borderRadius: 7,
-                      color: '#fca5a5',
-                      fontSize: 13,
-                      cursor: 'pointer',
-                      fontWeight: 500,
-                      transition: 'all 0.15s',
-                    }}
-                    className="hover:bg-red-500/15"
+                    className="bg-red-500/8 border-red-500/20 text-red-300 hover:bg-red-500/15 hover:border-red-500/35 transition-colors"
                   >
                     Delete poll
-                  </button>
+                  </Button>
                 </div>
               )}
             </div>

@@ -15,89 +15,42 @@ export default function PollResults() {
   const { poll, options, totalVotes } = usePage<Props>().props
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0c0c0c', color: '#fff', padding: '48px' }}>
-      {/* Minimal header for public page */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: 48,
-          paddingBottom: 24,
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
-        }}
-      >
-        <Link
-          href="/"
-          style={{
-            fontFamily: 'Instrument Serif, serif',
-            fontSize: 22,
-            color: '#fff',
-            textDecoration: 'none',
-          }}
-        >
+    <div className="min-h-screen bg-[#0c0c0c] text-white p-12">
+      {/* Minimal public header */}
+      <div className="flex items-center justify-between mb-12 pb-6 border-b border-white/8">
+        <Link href="/" className="font-['Instrument_Serif',serif] text-[22px] text-white">
           Polls
         </Link>
-        <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)' }}>Public results</span>
+        <span className="text-[13px] text-white/25">Public results</span>
       </div>
 
-      <div style={{ maxWidth: 600 }}>
+      <div className="max-w-[600px]">
         {/* Poll header */}
-        <div
-          style={{
-            background: '#141414',
-            border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: 16,
-            padding: '24px 28px',
-            marginBottom: 16,
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-        >
+        <div className="bg-[#141414] border border-white/8 rounded-2xl p-7 mb-4 relative overflow-hidden">
+          {/* Dynamic color accent bar */}
           <div
-            style={{
-              position: 'absolute',
-              left: 0,
-              top: 0,
-              bottom: 0,
-              width: 3,
-              background: poll.pollColor,
-              opacity: poll.expired ? 0.35 : 0.9,
-            }}
+            className="absolute left-0 top-0 bottom-0 w-[3px] rounded-l-2xl"
+            style={{ background: poll.pollColor, opacity: poll.expired ? 0.35 : 0.9 }}
           />
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
+          <div className="flex justify-between mb-3">
             <PollBadge variant={poll.expired ? 'expired' : 'active'} />
-            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>
+            <span className="text-xs text-white/30">
               {poll.expired ? `closed ${poll.closesAtRelative}` : `closes ${poll.closesAtRelative}`}
             </span>
           </div>
 
-          <h1
-            style={{
-              fontFamily: 'Instrument Serif, serif',
-              fontSize: 26,
-              letterSpacing: -0.5,
-              marginBottom: 8,
-            }}
-          >
+          <h1 className="font-['Instrument_Serif',serif] text-[26px] tracking-tight mb-2">
             {poll.title}
           </h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>
+          <p className="text-[13px] text-white/35">
             by {poll.author?.fullName ?? 'Unknown'} · {totalVotes}{' '}
             {totalVotes === 1 ? 'vote' : 'votes'}
           </p>
         </div>
 
         {/* Results */}
-        <div
-          style={{
-            background: '#141414',
-            border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: 16,
-            padding: '24px 28px',
-          }}
-        >
+        <div className="bg-[#141414] border border-white/8 rounded-2xl p-7">
           {options.map((opt) => (
             <PollResultBar
               key={opt.id}
@@ -108,15 +61,8 @@ export default function PollResults() {
               isUserVote={false}
             />
           ))}
-
-          <div
-            style={{
-              borderTop: '1px solid rgba(255,255,255,0.07)',
-              paddingTop: 14,
-              marginTop: 8,
-            }}
-          >
-            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)' }}>
+          <div className="border-t border-white/7 pt-3.5 mt-2">
+            <p className="text-[13px] text-white/30">
               {totalVotes} total {totalVotes === 1 ? 'vote' : 'votes'}
             </p>
           </div>

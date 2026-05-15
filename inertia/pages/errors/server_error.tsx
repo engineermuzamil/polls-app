@@ -1,123 +1,49 @@
 import { Link } from '@inertiajs/react'
+import { Button } from '@/components/ui/button'
 
 export default function ServerError() {
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        background: '#0c0c0c',
-        color: '#fff',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '48px 24px',
-        textAlign: 'center',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
-      {/* Background glow — red tint for errors */}
-      <div
-        style={{
-          position: 'fixed',
-          top: '-20%',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: 500,
-          height: 500,
-          background: 'radial-gradient(circle, rgba(239,68,68,0.08) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }}
-      />
+    <div className="min-h-screen bg-[#0c0c0c] text-white flex flex-col items-center justify-center px-6 py-12 text-center relative overflow-hidden">
+      {/* Red glow for errors */}
+      <div className="fixed top-[-20%] left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(239,68,68,0.08)_0%,transparent_70%)] pointer-events-none" />
 
-      <Link
-        href="/"
-        style={{
-          fontFamily: 'Instrument Serif, serif',
-          fontSize: 20,
-          color: 'rgba(255,255,255,0.35)',
-          textDecoration: 'none',
-          marginBottom: 56,
-          display: 'block',
-        }}
-      >
+      <Link href="/" className="font-['Instrument_Serif',serif] text-xl text-white/35 mb-14 block">
         Polls
       </Link>
 
       <p
-        style={{
-          fontFamily: 'Instrument Serif, serif',
-          fontSize: 'clamp(80px, 18vw, 160px)',
-          color: 'rgba(255,255,255,0.05)',
-          lineHeight: 1,
-          letterSpacing: -6,
-          marginBottom: 0,
-          userSelect: 'none',
-        }}
+        className="font-['Instrument_Serif',serif] text-white/5 leading-none select-none mb-0"
+        style={{ fontSize: 'clamp(80px, 18vw, 160px)', letterSpacing: -6 }}
       >
         500
       </p>
 
       <h1
-        style={{
-          fontFamily: 'Instrument Serif, serif',
-          fontSize: 'clamp(22px, 4vw, 32px)',
-          color: '#fff',
-          letterSpacing: -0.5,
-          marginBottom: 10,
-          marginTop: -12,
-        }}
+        className="font-['Instrument_Serif',serif] text-white tracking-tight mb-2.5 -mt-3"
+        style={{ fontSize: 'clamp(22px, 4vw, 32px)' }}
       >
         Something went wrong
       </h1>
 
-      <p
-        style={{
-          fontSize: 15,
-          color: 'rgba(255,255,255,0.35)',
-          fontWeight: 300,
-          maxWidth: 340,
-          lineHeight: 1.6,
-          marginBottom: 36,
-        }}
-      >
+      <p className="text-[15px] text-white/35 font-light max-w-[340px] leading-relaxed mb-9">
         An unexpected error occurred on the server. Try refreshing the page or come back in a
         moment.
       </p>
 
-      <div style={{ display: 'flex', gap: 10 }}>
-        <button
+      <div className="flex gap-2.5">
+        <Button
           onClick={() => window.location.reload()}
-          style={{
-            padding: '10px 22px',
-            background: '#6366f1',
-            color: '#fff',
-            borderRadius: 8,
-            fontSize: 14,
-            fontWeight: 500,
-            border: 'none',
-            cursor: 'pointer',
-          }}
+          className="bg-indigo-500 hover:bg-indigo-600 text-white font-medium px-5"
         >
           Refresh page
-        </button>
-        <Link
-          href="/"
-          style={{
-            padding: '10px 22px',
-            background: 'rgba(255,255,255,0.05)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            color: 'rgba(255,255,255,0.45)',
-            borderRadius: 8,
-            fontSize: 14,
-            textDecoration: 'none',
-            display: 'inline-flex',
-            alignItems: 'center',
-          }}
+        </Button>
+        <Button
+          variant="outline"
+          asChild
+          className="bg-white/5 border-white/8 text-white/45 hover:bg-white/8 hover:text-white/70 px-5"
         >
-          Go home
-        </Link>
+          <Link href="/">Go home</Link>
+        </Button>
       </div>
     </div>
   )

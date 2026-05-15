@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react'
+import { Button } from '@/components/ui/button'
 
 interface NavLink {
   label: string
@@ -14,89 +15,57 @@ interface PageHeaderProps {
 
 export default function PageHeader({ userName, links = [] }: PageHeaderProps) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: 48,
-        paddingBottom: 24,
-        borderBottom: '1px solid rgba(255,255,255,0.08)',
-      }}
-    >
-      <span
-        style={{
-          fontFamily: 'Instrument Serif, serif',
-          fontSize: 22,
-          color: '#fff',
-          letterSpacing: '-0.3px',
-        }}
+    <div className="flex items-center justify-between mb-12 pb-6 border-b border-white/8">
+      <Link
+        href="/"
+        className="font-['Instrument_Serif',serif] text-[22px] text-white tracking-[-0.3px]"
       >
         Polls
-      </span>
+      </Link>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        {links.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            style={
-              link.variant === 'primary'
-                ? {
-                    background: '#6366f1',
-                    color: '#fff',
-                    fontSize: 13,
-                    fontWeight: 500,
-                    padding: '7px 14px',
-                    borderRadius: 7,
-                    textDecoration: 'none',
-                    transition: 'background 0.15s',
-                  }
-                : {
-                    background: 'transparent',
-                    color: link.active ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.4)',
-                    fontSize: 13,
-                    fontWeight: 400,
-                    padding: '7px 14px',
-                    borderRadius: 7,
-                    textDecoration: 'none',
-                    transition: 'color 0.15s',
-                  }
-            }
-            className={link.variant === 'primary' ? 'hover:bg-indigo-600' : 'hover:text-white/70'}
-          >
-            {link.label}
-          </Link>
-        ))}
+      <div className="flex items-center gap-1">
+        {links.map((link) =>
+          link.variant === 'primary' ? (
+            <Button
+              key={link.href}
+              asChild
+              size="sm"
+              className="bg-indigo-500 hover:bg-indigo-600 text-white text-[13px] font-medium h-8 px-3.5 transition-colors"
+            >
+              <Link href={link.href}>{link.label}</Link>
+            </Button>
+          ) : (
+            <Button
+              key={link.href}
+              variant="ghost"
+              asChild
+              size="sm"
+              className={`text-[13px] font-normal h-8 px-3.5 transition-colors ${
+                link.active ? 'text-white/80 hover:text-white' : 'text-white/40 hover:text-white/70'
+              } hover:bg-white/6`}
+            >
+              <Link href={link.href}>{link.label}</Link>
+            </Button>
+          )
+        )}
 
         {userName && (
           <>
-            <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)', padding: '0 4px' }}>
-              |
-            </span>
-            <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>{userName}</span>
+            <span className="text-white/20 text-sm px-1">|</span>
+            <span className="text-[13px] text-white/35 px-2">{userName}</span>
           </>
         )}
 
-        <Link
-          href="/logout"
-          method="post"
-          as="button"
-          style={{
-            background: 'rgba(255,255,255,0.05)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            color: 'rgba(255,255,255,0.4)',
-            borderRadius: 7,
-            padding: '7px 14px',
-            fontSize: 13,
-            cursor: 'pointer',
-            marginLeft: 4,
-            transition: 'all 0.15s',
-          }}
-          className="hover:text-white/70 hover:bg-white/8"
+        <Button
+          variant="ghost"
+          size="sm"
+          asChild
+          className="text-[13px] text-white/40 hover:text-white/70 hover:bg-white/6 h-8 px-3.5 ml-1 transition-colors"
         >
-          Sign out
-        </Link>
+          <Link href="/logout" method="post" as="button">
+            Sign out
+          </Link>
+        </Button>
       </div>
     </div>
   )
