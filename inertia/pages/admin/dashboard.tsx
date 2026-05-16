@@ -1,116 +1,95 @@
-import { Data } from '@generated/data'
-import { Link } from '@inertiajs/react'
-import { usePage } from '@inertiajs/react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import { Link, useForm, usePage } from '@inertiajs/react'
+import type { InertiaProps } from '~/types'
+import type { PollData } from '~/types/poll'
+import PageHeader from '~/components/page_header'
+import PollCard from '~/components/polls/poll_card'
+
+type Props = InertiaProps<{
+  activePolls: PollData[]
+  expiredPolls: PollData[]
+  trashedCount: number
+}>
 
 export default function AdminDashboard() {
-  const { user, flash } = usePage<Data.SharedProps>().props
+  const { activePolls, expiredPolls, trashedCount, user } = usePage<Props>().props
+  const deleteForm = useForm({})
+
+  function handleDelete(slug: string) {
+    if (!confirm('Move this poll to trash?')) return
+    deleteForm.delete(`/admin/polls/${slug}`)
+  }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0c0c0c', color: '#fff', padding: '48px' }}>
-      {/* Flash message */}
-      {flash?.success && (
-        <div
-          style={{
-            background: 'rgba(0,166,62,0.1)',
-            border: '1px solid #00a63e',
-            color: '#00a63e',
-            borderRadius: 8,
-            padding: '12px 16px',
-            marginBottom: 32,
-            fontSize: 14,
-            fontWeight: 500,
-          }}
-        >
-          {flash.success}
-        </div>
-      )}
-
-      {/* Header */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: 48,
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
-          paddingBottom: 24,
-        }}
-      >
-        <span style={{ fontFamily: 'Instrument Serif, serif', fontSize: 22 }}>Polls</span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>
-            {user?.fullName ?? user?.email}
-          </span>
-          <Button
-            asChild
-            variant="outline"
-            size="sm"
-            style={{
-              background: 'rgba(255,255,255,0.06)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              color: 'rgba(255,255,255,0.6)',
-              borderRadius: 8,
-              fontSize: 13,
-              cursor: 'pointer',
-              height: 'auto',
-              padding: '8px 16px',
-            }}
-            className="hover:text-white hover:bg-white/10"
-          >
-            <Link href="/logout" method="post" as="button">
-              Sign out
-            </Link>
-          </Button>
-        </div>
-      </div>
-
-      {/* Title */}
-      <h1
-        style={{
-          fontFamily: 'Instrument Serif, serif',
-          fontSize: 36,
-          letterSpacing: -1,
-          marginBottom: 8,
-        }}
-      >
-        Admin Dashboard
-      </h1>
-      <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14, marginBottom: 40 }}>
-        Manage polls, review results, and control the trash.
-      </p>
+    <div className="min-h-screen bg-[#0c0c0c] text-white p-12">
+      <PageHeader
+        userName={user?.fullName ?? user?.email}
+        links={[
+          { label: `Trash (${trashedCount})`, href: '/admin/polls/trash' },
+          { label: '+ Create Poll', href: '/admin/polls/create', variant: 'primary' },
+        ]}
+      />
 
       {/* Stats */}
-      <div
-        style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16, maxWidth: 640 }}
-      >
+      <div className="grid grid-cols-3 gap-3 max-w-[520px] mb-12">
         {[
-          { label: 'Active polls', value: '—', color: '#6366f1' },
-          { label: 'Expired polls', value: '—', color: '#f59e0b' },
-          { label: 'Trashed', value: '—', color: '#6b7280' },
+          { label: 'Active', value: activePolls.length, color: 'text-indigo-400' },
+          { label: 'Expired', value: expiredPolls.length, color: 'text-amber-400' },
+          { label: 'Trashed', value: trashedCount, color: 'text-zinc-500' },
         ].map((stat) => (
-          <Card
-            key={stat.label}
-            style={{
-              background: '#141414',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 12,
-            }}
-          >
-            <CardContent style={{ padding: '20px 24px' }}>
-              <div style={{ fontSize: 28, fontWeight: 600, color: stat.color, marginBottom: 4 }}>
-                {stat.value}
-              </div>
-              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{stat.label}</div>
-            </CardContent>
-          </Card>
+          <div key={stat.label} className="bg-[#141414] border border-white/8 rounded-xl p-5">
+            <div className={`text-[26px] font-semibold mb-0.5 ${stat.color}`}>{stat.value}</div>
+            <div className="text-xs text-white/30">{stat.label}</div>
+          </div>
         ))}
       </div>
 
-      <p style={{ marginTop: 48, fontSize: 13, color: 'rgba(255,255,255,0.2)' }}>
-        Full dashboard UI is coming in feature/4-admin-ui.
-      </p>
+      {/* Active */}
+      <div className="mb-10">
+        <p className="text-[11px] font-semibold uppercase tracking-widest text-white/25 mb-3">
+          Active
+        </p>
+        {activePolls.length === 0 ? (
+          <p className="text-[13px] text-white/20 py-3">
+            No active polls.{' '}
+            <Link
+              href="/admin/polls/create"
+              className="text-indigo-400 hover:text-indigo-300 transition-colors"
+            >
+              Create one →
+            </Link>
+          </p>
+        ) : (
+          <div className="flex flex-col gap-2">
+            {activePolls.map((poll) => (
+              <PollCard
+                key={poll.slug}
+                poll={poll}
+                href={`/polls/${poll.slug}`}
+                onDelete={handleDelete}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Expired */}
+      {expiredPolls.length > 0 && (
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-white/25 mb-3">
+            Expired
+          </p>
+          <div className="flex flex-col gap-2">
+            {expiredPolls.map((poll) => (
+              <PollCard
+                key={poll.slug}
+                poll={poll}
+                href={`/polls/${poll.slug}`}
+                onDelete={handleDelete}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

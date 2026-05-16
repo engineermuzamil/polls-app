@@ -139,16 +139,16 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['dashboard']>>>
     }
   }
-  'admin.polls.store': {
-    methods: ["POST"]
-    pattern: '/admin/polls'
+  'admin.polls.create': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/polls/create'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/poll').createPollValidator)>>
+      body: {}
       paramsTuple: []
       params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/poll').createPollValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['create']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['create']>>>
     }
   }
   'admin.polls.trash': {
@@ -161,6 +161,18 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['trash']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['trash']>>>
+    }
+  }
+  'admin.polls.store': {
+    methods: ["POST"]
+    pattern: '/admin/polls'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/poll').createPollValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/poll').createPollValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_polls_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.polls.delete': {

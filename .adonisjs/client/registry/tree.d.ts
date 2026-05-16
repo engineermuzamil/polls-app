@@ -21,8 +21,9 @@ export interface ApiDefinition {
   admin: {
     dashboard: typeof routes['admin.dashboard']
     polls: {
-      store: typeof routes['admin.polls.store']
+      create: typeof routes['admin.polls.create']
       trash: typeof routes['admin.polls.trash']
+      store: typeof routes['admin.polls.store']
       delete: typeof routes['admin.polls.delete']
       restore: typeof routes['admin.polls.restore']
       forceDelete: typeof routes['admin.polls.force-delete']

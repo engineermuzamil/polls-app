@@ -58,6 +58,19 @@ export class PollSchema extends BaseModel {
   declare userId: number | null
 }
 
+export class SessionSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'updatedAt', 'value'] as const
+  $columns = SessionSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+  @column()
+  declare value: string
+}
+
 export class UserSchema extends BaseModel {
   static $columns = ['createdAt', 'email', 'fullName', 'id', 'password', 'role', 'updatedAt'] as const
   $columns = UserSchema.$columns

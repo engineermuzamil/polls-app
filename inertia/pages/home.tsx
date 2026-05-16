@@ -10,32 +10,13 @@ export default function Home() {
           <Button
             variant="ghost"
             asChild
-            style={{
-              color: 'rgba(255,255,255,0.6)',
-              fontSize: '14px',
-              fontWeight: 400,
-              padding: '8px 18px',
-              borderRadius: '8px',
-              background: 'transparent',
-              height: 'auto',
-            }}
-            className="hover:text-white hover:bg-white/6"
+            className="text-white/60 hover:text-white hover:bg-white/6 text-sm font-normal h-9 px-4"
           >
             <Link href="/login">Login</Link>
           </Button>
           <Button
             asChild
-            style={{
-              background: '#6366f1',
-              color: '#fff',
-              fontSize: '14px',
-              fontWeight: 500,
-              padding: '8px 20px',
-              borderRadius: '8px',
-              height: 'auto',
-              border: 'none',
-            }}
-            className="hover:bg-[#5254cc] hover:-translate-y-px transition-all"
+            className="bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium h-9 px-5 transition-all hover:-translate-y-px"
           >
             <Link href="/register">Get started</Link>
           </Button>
@@ -47,17 +28,14 @@ export default function Home() {
           <span className="hero-badge-dot" />
           Live voting · Real-time results
         </div>
-
         <h1 className="hero-heading">
           Opinions that
           <br />
           <em>actually count</em>
         </h1>
-
         <p className="hero-sub">
           Create polls in seconds, share them with your team, and watch results come in live.
         </p>
-
         <div className="hero-actions">
           <Link href="/register" className="btn-hero-primary">
             Create your first poll →

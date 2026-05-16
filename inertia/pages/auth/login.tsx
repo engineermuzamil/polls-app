@@ -11,25 +11,16 @@ export default function Login() {
         <Link href="/" className="auth-logo">
           Polls
         </Link>
-
         <h1 className="auth-heading">Welcome back</h1>
         <p className="auth-sub">Sign in to your account to continue</p>
 
         <Form action="/login" method="post">
           {({ errors }) => (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div className="field">
+            <div className="flex flex-col gap-4">
+              <div>
                 <Label
                   htmlFor="email"
-                  style={{
-                    display: 'block',
-                    fontSize: '11px',
-                    fontWeight: 500,
-                    color: 'rgba(255,255,255,0.5)',
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    marginBottom: '6px',
-                  }}
+                  className="block text-[11px] font-medium text-white/50 uppercase tracking-widest mb-1.5"
                 >
                   Email
                 </Label>
@@ -40,34 +31,15 @@ export default function Login() {
                   autoComplete="username"
                   placeholder="you@example.com"
                   data-invalid={errors.email ? 'true' : undefined}
-                  style={{
-                    width: '100%',
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    borderRadius: '8px',
-                    padding: '10px 14px',
-                    fontSize: '14px',
-                    color: '#fff',
-                    height: '40px',
-                    outline: 'none',
-                  }}
-                  className="placeholder:text-white/20 focus-visible:border-indigo-500/50 focus-visible:ring-1 focus-visible:ring-indigo-500/20"
+                  className="bg-white/6 border-white/10 text-white placeholder:text-white/20 focus-visible:border-indigo-500/50 focus-visible:ring-indigo-500/20 h-10"
                 />
-                {errors.email && <div className="field-error">{errors.email}</div>}
+                {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email}</p>}
               </div>
 
-              <div className="field">
+              <div>
                 <Label
                   htmlFor="password"
-                  style={{
-                    display: 'block',
-                    fontSize: '11px',
-                    fontWeight: 500,
-                    color: 'rgba(255,255,255,0.5)',
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    marginBottom: '6px',
-                  }}
+                  className="block text-[11px] font-medium text-white/50 uppercase tracking-widest mb-1.5"
                 >
                   Password
                 </Label>
@@ -77,37 +49,14 @@ export default function Login() {
                   id="password"
                   autoComplete="current-password"
                   placeholder="••••••••"
-                  style={{
-                    width: '100%',
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    borderRadius: '8px',
-                    padding: '10px 14px',
-                    fontSize: '14px',
-                    color: '#fff',
-                    height: '40px',
-                    outline: 'none',
-                  }}
-                  className="placeholder:text-white/20 focus-visible:border-indigo-500/50 focus-visible:ring-1 focus-visible:ring-indigo-500/20"
+                  className="bg-white/6 border-white/10 text-white placeholder:text-white/20 focus-visible:border-indigo-500/50 focus-visible:ring-indigo-500/20 h-10"
                 />
-                {errors.password && <div className="field-error">{errors.password}</div>}
+                {errors.password && <p className="text-xs text-red-400 mt-1">{errors.password}</p>}
               </div>
 
               <Button
                 type="submit"
-                style={{
-                  width: '100%',
-                  height: '44px',
-                  background: '#6366f1',
-                  color: '#fff',
-                  borderRadius: '8px',
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  marginTop: '4px',
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
-                className="hover:bg-[#5254cc] hover:-translate-y-px hover:shadow-[0_6px_20px_rgba(99,102,241,0.3)] transition-all"
+                className="w-full h-11 bg-indigo-500 hover:bg-indigo-600 text-white font-medium rounded-lg transition-all hover:-translate-y-px hover:shadow-[0_6px_20px_rgba(99,102,241,0.3)] mt-1"
               >
                 Sign in →
               </Button>
