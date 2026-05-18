@@ -5,7 +5,10 @@ nixPkgs = ["nodejs_24"]
 cmds = ["npm ci --include=dev"]
 
 [phases.build]
-cmds = ["npm run build"]
+cmds = [
+  "npm run build",
+  "cp -r public/assets build/public/assets"
+]
 envs = ["NODE_ENV=production"]
 
 [start]
