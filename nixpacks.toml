@@ -2,10 +2,11 @@
 nixPkgs = ["nodejs_24"]
 
 [phases.install]
-cmds = ["npm ci"]
+cmds = ["npm ci --include=dev"]
 
 [phases.build]
 cmds = ["npm run build"]
+envs = ["NODE_ENV=development"]
 
 [start]
 cmd = "node ace migration:run --force && node build/bin/server.js"
