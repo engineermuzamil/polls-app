@@ -17,6 +17,7 @@ export default function PollsIndex() {
       <PageHeader
         userName={user?.fullName ?? user?.email}
         links={[{ label: 'Polls', href: '/polls', active: true }]}
+        titleHref={null}
       />
 
       <div className="mb-9">

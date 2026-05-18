@@ -24,7 +24,11 @@ export default function PollsTrash() {
     <div className="min-h-screen bg-[#0c0c0c] text-white p-12">
       <PageHeader
         userName={user?.fullName ?? user?.email}
-        links={[{ label: '+ Create Poll', href: '/admin/polls/create', variant: 'primary' }]}
+        titleHref={null}
+        links={[
+          { label: 'Dashboard', href: '/admin' },
+          { label: '+ Create Poll', href: '/admin/polls/create', variant: 'primary' },
+        ]}
       />
 
       <div className="mb-8">

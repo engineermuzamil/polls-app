@@ -53,7 +53,11 @@ export default function CreatePoll() {
     <div className="min-h-screen bg-[#0c0c0c] text-white p-12">
       <PageHeader
         userName={user?.fullName ?? user?.email}
-        links={[{ label: 'Trash', href: '/admin/polls/trash' }]}
+        titleHref={null}
+        links={[
+          { label: 'Dashboard', href: '/admin' },
+          { label: 'Trash', href: '/admin/polls/trash' },
+        ]}
       />
 
       <div className="max-w-[560px]">

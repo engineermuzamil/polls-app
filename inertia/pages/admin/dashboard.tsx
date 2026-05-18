@@ -23,6 +23,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-[#0c0c0c] text-white p-12">
       <PageHeader
         userName={user?.fullName ?? user?.email}
+        titleHref={null}
         links={[
           { label: `Trash (${trashedCount})`, href: '/admin/polls/trash' },
           { label: '+ Create Poll', href: '/admin/polls/create', variant: 'primary' },

@@ -57,6 +57,7 @@ export default function PollShow() {
     <div className="min-h-screen bg-[#0c0c0c] text-white p-12">
       <PageHeader
         userName={user?.fullName ?? user?.email}
+        titleHref={null}
         links={
           isAdmin
             ? [
