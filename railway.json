@@ -2,7 +2,7 @@
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "npm run build"
+    "buildCommand": "npm run build && cp -r public/assets build/public/assets"
   },
   "deploy": {
     "startCommand": "node ace migration:run --force && node build/bin/server.js",
