@@ -6,7 +6,7 @@ cmds = ["npm ci --include=dev"]
 
 [phases.build]
 cmds = ["npm run build"]
-envs = ["NODE_ENV=development"]
+envs = ["NODE_ENV=production"]
 
 [start]
 cmd = "node ace migration:run --force && node build/bin/server.js"
