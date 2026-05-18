@@ -7,7 +7,12 @@ cmds = ["npm ci --include=dev"]
 [phases.build]
 cmds = [
   "npm run build",
-  "cp -r public/assets build/public/assets"
+  "echo '--- public/assets contents ---'",
+  "find public/assets -type f 2>/dev/null || echo 'public/assets is EMPTY or missing'",
+  "echo '--- build/ contents ---'",
+  "find build -type f 2>/dev/null | head -50",
+  "echo '--- searching for manifest anywhere ---'",
+  "find . -name 'manifest.json' -not -path '*/node_modules/*' 2>/dev/null || echo 'NO MANIFEST FOUND ANYWHERE'"
 ]
 envs = ["NODE_ENV=production"]
 
